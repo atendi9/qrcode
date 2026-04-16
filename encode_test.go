@@ -7,6 +7,7 @@ import (
 
 	"github.com/atendi9/capivara/assert"
 	"github.com/atendi9/capivara/langs"
+	"github.com/atendi9/qrcode/color"
 )
 
 func TestEncode(t *testing.T) {
@@ -38,7 +39,7 @@ func TestEncode(t *testing.T) {
 		t := assert.New(langs.EN_US, v)
 		content := ""
 
-		qr, err := Encode(content)
+		qr, err := Encode(content, color.Blue)
 		if err != nil {
 			assert.Empty(t, qr)
 			assert.NotNil(t, err)
