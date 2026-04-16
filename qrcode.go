@@ -5,6 +5,7 @@ package qrcode
 import (
 	"errors"
 	"image"
+	"image/color"
 	"image/jpeg"
 	"image/png"
 	"io"
@@ -21,7 +22,8 @@ type QRCode interface {
 	// Metadata returns technical details about the QR code structure.
 	Metadata() Metadata
 	// SetIcon overlays an image (logo) in the center of the QR code.
-	SetIcon(icon io.Reader)
+	// It handles the icon scaling and optional background box rendering.
+	SetIcon(icon io.Reader, box ...IconBox)
 	// Image encodes the QR code into a specific Mime format and writes it to w.
 	Image(w io.Writer, m Mime) error
 	// Scale resizes the current QR Code to a new width and height.
@@ -73,8 +75,52 @@ func (q *qrCode) Image(w io.Writer, m Mime) error {
 // Metadata returns the QR code specifications.
 func (q *qrCode) Metadata() Metadata { return Metadata{Dimensions: 2} }
 
+// IconBox defines the interface for the background container of the icon.
+// Any type implementing this interface can be used to provide the background image.
+type IconBox interface {
+	// Image returns the image.Image to be used as the icon's background.
+	Image() image.Image
+}
+
+// CarbonFiberBox represents a box that generates a carbon fiber texture pattern.
+type CarbonFiberBox struct {
+    size int
+}
+
+// NewCarbonFiberBox creates and returns a new CarbonFiberBox with the specified size.
+// It returns an IconBox interface implementation.
+func NewCarbonFiberBox(size int) IconBox {
+    return &CarbonFiberBox{size: size}
+}
+
+// Image generates and returns a new image.Image containing a simulated
+// carbon fiber texture. The pattern is created using alternating shades of 
+// dark gray blocks based on the configured size of the CarbonFiberBox.
+func (c *CarbonFiberBox) Image() image.Image {
+    img := image.NewRGBA(image.Rect(0, 0, c.size, c.size))
+    draw.Draw(img, img.Bounds(), image.NewUniform(color.Black), image.Point{}, draw.Src)
+
+    darkGray := color.RGBA{15, 15, 15, 255}
+    vDarkGray := color.RGBA{10, 10, 10, 255}
+
+    patternSize := 4
+    for y := 0; y < c.size; y++ {
+        for x := 0; x < c.size; x++ {
+            if (x/patternSize+y/patternSize)%2 == 0 {
+                img.Set(x, y, darkGray)
+            } else {
+                img.Set(x, y, vDarkGray)
+            }
+        }
+    }
+
+    return img
+}
+
 // SetIcon reads an image from iconReader and draws it centered on the QR code.
-func (q *qrCode) SetIcon(iconReader io.Reader) {
+// It scales the icon to 20% of the QR code dimensions and applies an optional background
+// provided by the IconBox interface.
+func (q *qrCode) SetIcon(iconReader io.Reader, box ...IconBox) {
 	icon, _, err := image.Decode(iconReader)
 	if err != nil {
 		return
@@ -92,9 +138,13 @@ func (q *qrCode) SetIcon(iconReader io.Reader) {
 
 	rect := image.Rect(xOffset, yOffset, xOffset+logoWidth, yOffset+logoHeight)
 
-	draw.Draw(q.RGBA, rect, image.Black, image.Point{}, draw.Src) 
-
-	draw.ApproxBiLinear.Scale(q.RGBA, rect, icon, icon.Bounds(), draw.Over, nil) 
+	// Define the background image. Defaults to image.Black if no IconBox is provided.
+	var img image.Image = image.Black
+	if len(box) > 0 {
+		img = box[0].Image()
+	}
+	draw.Draw(q.RGBA, rect, img, image.Point{}, draw.Src)
+	draw.ApproxBiLinear.Scale(q.RGBA, rect, icon, icon.Bounds(), draw.Over, nil)
 }
 
 // Scale resizes the current QR Code to a new width and height.
