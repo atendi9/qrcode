@@ -39,7 +39,7 @@ func TestEncode(t *testing.T) {
 		t := assert.New(langs.EN_US, v)
 		content := ""
 
-		qr, err := Encode(content, color.Blue)
+		qr, err := Encode(content, Options{Color: color.Blue, Size: 1032})
 		if err != nil {
 			assert.Empty(t, qr)
 			assert.NotNil(t, err)
