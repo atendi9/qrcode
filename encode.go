@@ -7,15 +7,30 @@ import (
 
 	"github.com/atendi9/qrcode/color"
 	"github.com/i9si-sistemas/qrcode"
+	"golang.org/x/image/draw"
 )
 
-// Encode generates a QR Code from the given content.
-// The palette parameter is optional; if omitted, [color.DefaultPalette] is used.
-func Encode(content string, palette ...color.Color) (QRCode, error) {
+// Encode generates a high-recovery (High) QR Code from the given content.
+// The options parameter is variadic and optional, allowing customization
+// of the QR code's size and color palette.
+//
+// If no options are provided, or if the specified size is less than 256,
+// it defaults to a size of 1024x1024 pixels. If no custom color is specified
+// within the options, [color.DefaultPalette] is used for the foreground and background.
+//
+// It returns a QRCode interface containing the generated RGBA image and the original
+// content, or an error if the generation fails.
+func Encode(content string, options ...Options) (QRCode, error) {
 	p := color.DefaultPalette
-
-	if len(palette) > 0 {
-		p.ForeGround, p.BackGround = palette[0].Pallete()
+	size := 1024
+	if len(options) > 0 {
+		cfg := options[0]
+		if cfg.Color != nil {
+			p.ForeGround, p.BackGround = cfg.Color.Palette()
+		}
+		if cfg.Size >= 256 {
+			size = cfg.Size
+		}
 	}
 
 	q, err := qrcode.New(content, qrcode.High)
@@ -23,16 +38,12 @@ func Encode(content string, palette ...color.Color) (QRCode, error) {
 		return nil, err
 	}
 
-	img := q.WithColors(p.ForeGround, p.BackGround).Image(256)
+	img := q.WithColors(p.ForeGround, p.BackGround).Image(size)
 
 	bounds := img.Bounds()
 	rgbaImg := image.NewRGBA(bounds)
 
-	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-		for x := bounds.Min.X; x < bounds.Max.X; x++ {
-			rgbaImg.Set(x, y, img.At(x, y))
-		}
-	}
+	draw.Draw(rgbaImg, bounds, img, bounds.Min, draw.Src)
 
 	return &qrCode{
 		RGBA:    rgbaImg,
