@@ -14,11 +14,7 @@ import (
 )
 
 func TestPaletteConsistency(t *testing.T) {
-	allColors := []Color{
-		Black, White, Gray, Blue, Red, Green, Yellow, Magenta, Cyan, Orange,
-		Purple, Gold, Silver, Pink, Brown, Navy, Lime, Teal, Indigo, Violet,
-		Crimson, Olive, Maroon, SkyBlue, Rose, Emerald,
-	}
+	allColors := DefaultColors()
 
 	for _, color := range allColors {
 		t.Run(color.Name(), func(t *testing.T) {

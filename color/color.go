@@ -121,6 +121,20 @@ func NewPalette(name Name) Palette {
 	return DefaultPalette
 }
 
+
+// DefaultColors returns a list of all built-in Color objects currently registered.
+func DefaultColors() []Color {
+	mu.RLock()
+	defer mu.RUnlock()
+
+	colors := make([]Color, 0, len(registry))
+	for name := range registry {
+		colors = append(colors, name)
+	}
+	return colors
+}
+
+
 // Color defines the behavior for color objects.
 type Color interface {
 	// Name returns the descriptive name of the color.
