@@ -17,9 +17,9 @@ func (n Name) Name() string {
 	return string(n)
 }
 
-// Pallete returns the foreground and background RGBA values for the specific color name.
+// Palette returns the foreground and background RGBA values for the specific color name.
 // This is part of the Color interface implementation.
-func (n Name) Pallete() (foreground color.RGBA, background color.RGBA) {
+func (n Name) Palette() (foreground color.RGBA, background color.RGBA) {
 	p := NewPalette(n)
 	return p.ForeGround, p.BackGround
 }
@@ -139,8 +139,8 @@ func DefaultColors() []Color {
 type Color interface {
 	// Name returns the descriptive name of the color.
 	Name() string
-	// Pallete returns the foreground and background RGBA values.
-	Pallete() (foreground color.RGBA, background color.RGBA)
+	// Palette returns the foreground and background RGBA values.
+	Palette() (foreground color.RGBA, background color.RGBA)
 }
 
 // IdentifyColor finds the closest color from a list of Color objects using Euclidean distance.
@@ -154,7 +154,7 @@ func IdentifyColor(input color.Color, colors []Color) string {
 	minDistance := math.MaxFloat64
 
 	for _, color := range colors {
-		foreground, _ := color.Pallete()
+		foreground, _ := color.Palette()
 
 		// Euclidean distance formula: sqrt((r2-r1)^2 + (g2-g1)^2 + (b2-b1)^2)
 		dist := math.Sqrt(
