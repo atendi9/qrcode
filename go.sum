@@ -1,12 +1,4 @@
 github.com/atendi9/capivara v1.1.0 h1:GQSJefpZaD5hWXUyM+Env7ykKGOYdx50ZplhPP7G43Y=
 github.com/atendi9/capivara v1.1.0/go.mod h1:O/G5B5bVAEXndeSQYoN+hMYcB+x4JttJ6FFTr5SqYv4=
-github.com/i9si-sistemas/assert v0.0.0-20241226143514-2239efdffece h1:dXX3IVWmQl4sRUpBPR0VaD4ev70lbK00a4gt/VZZHIA=
-github.com/i9si-sistemas/assert v0.0.0-20241226143514-2239efdffece/go.mod h1:xRwY4u6NZZjNLlgdBSaNESQEUSJ4CxuT4lWQAbvwfBQ=
-github.com/i9si-sistemas/bitset v0.0.0-20250425133431-3da544fa4231 h1:79Hr4RvaooVFUVSKaOUTLKObBLz7mveOsqaHHF3ab6w=
-github.com/i9si-sistemas/bitset v0.0.0-20250425133431-3da544fa4231/go.mod h1:nW81cKCAktXODdl1qLRXERRcUx5S8F1zqVyquEDDIi0=
-github.com/i9si-sistemas/qrcode v1.0.1 h1:fkkto7fPLucf2gRnRXGgRuofkHqL8UowAm7yH/oh66Y=
-github.com/i9si-sistemas/qrcode v1.0.1/go.mod h1:arcsJZuB7N35N7Hw+Uik+fEFo8Z437cnehbzYT19cic=
-github.com/i9si-sistemas/reedsolomon v0.0.0-20250425143232-90e93d3e9b7e h1:9S+Bo4KjoYOThCj51AOs4DjqfEsOhE2zNZuBavsG84E=
-github.com/i9si-sistemas/reedsolomon v0.0.0-20250425143232-90e93d3e9b7e/go.mod h1:adoLIZwaZRCQuRVyCMrnZqKGPgL76RxXry6/RlUPd6E=
 golang.org/x/image v0.39.0 h1:skVYidAEVKgn8lZ602XO75asgXBgLj9G/FE3RbuPFww=
 golang.org/x/image v0.39.0/go.mod h1:sIbmppfU+xFLPIG0FoVUTvyBMmgng1/XAMhQ2ft0hpA=

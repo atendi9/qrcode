@@ -6,7 +6,7 @@ import (
 	"image"
 
 	"github.com/atendi9/qrcode/color"
-	"github.com/i9si-sistemas/qrcode"
+	"github.com/atendi9/qrcode/encoder"
 	"golang.org/x/image/draw"
 )
 
@@ -33,7 +33,7 @@ func Encode(content string, options ...Options) (QRCode, error) {
 		}
 	}
 
-	q, err := qrcode.New(content, qrcode.High)
+	q, err := encoder.NewQRCode(content, encoder.High)
 	if err != nil {
 		return nil, err
 	}
